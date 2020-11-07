@@ -1,16 +1,18 @@
 // @ts-nocheck
-import React, { memo } from 'react';
+import React, { useEffect, memo } from 'react';
 import { useTable, useSortBy } from 'react-table';
+import { TableRow } from './TableRow/TableRow';
 import './Table.scss';
 
 interface TableProps {
     columns: any[];
     data: any[];
-    setSelectRow: (property: any) => void;
-    setSelectedRowData: (property: any) => void;
+    setSelectedRow: (property: any) => void;
+    setAllRow: (property: any) => void;
+    setCurentRowIndex: (property: any) => void;
 }
 
-const TableInner = ({ columns, data, setSelectRow, setSelectedRowData }: TableProps) => {
+const TableInner = ({ columns, data, setSelectedRow, setAllRow, setCurentRowIndex }: TableProps) => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
             columns,
@@ -19,19 +21,9 @@ const TableInner = ({ columns, data, setSelectRow, setSelectedRowData }: TablePr
         useSortBy
     );
 
-    const onMouseClick = (id) => {
-        setSelectRow(id);
-        console.log(id);
-    };
-
-    const onMouseDoubleClick = (original) => {
-        setSelectedRowData(original);
-    };
-
-    const onMouseContextMenu = (id, original) => {
-        setSelectRow(id);
-        setSelectedRowData(original);
-    };
+    useEffect(() => {
+        setAllRow(rows);
+    }, [rows, setAllRow]);
 
     return (
         <table {...getTableProps()}>
@@ -52,19 +44,17 @@ const TableInner = ({ columns, data, setSelectRow, setSelectedRowData }: TablePr
                 ))}
             </thead>
             <tbody {...getTableBodyProps()}>
-                {rows.map((row) => {
+                {rows.map((row, i) => {
                     prepareRow(row);
                     return (
-                        <tr
-                            {...row.getRowProps()}
-                            className="table__row"
-                            onClick={() => onMouseClick(row.id)}
-                            onDoubleClick={() => onMouseDoubleClick(row.original)}
-                            onContextMenu={() => onMouseContextMenu(row.id, row.original)}>
-                            {row.cells.map((cell) => {
-                                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-                            })}
-                        </tr>
+                        <React.Fragment key={row.id}>
+                            <TableRow
+                                row={row}
+                                i={i}
+                                setSelectedRow={setSelectedRow}
+                                setCurentRowIndex={setCurentRowIndex}
+                            />
+                        </React.Fragment>
                     );
                 })}
             </tbody>
