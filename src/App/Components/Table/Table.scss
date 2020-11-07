@@ -1,0 +1,7 @@
+.table {
+    &__row {
+        &--active {
+            background: red;
+        }
+    }
+}
