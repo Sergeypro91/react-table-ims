@@ -78,10 +78,10 @@ const TableInner = ({ columns, data, setSelectedRow, setAllRow, setCurentRowInde
                                     />
                                 )}
 
-                                <span>
-                                    {column.isSorted && column.isSortedDesc && ' 🔽'}
-                                    {column.isSorted && !column.isSortedDesc && ' 🔼'}
-                                    {!column.isSorted && ''}
+                                <span className="table__arrow">
+                                    {column.isSorted && column.isSortedDesc && '🠧'}
+                                    {column.isSorted && !column.isSortedDesc && '🠥'}
+                                    {!column.isSorted && '⮁'}
                                 </span>
                             </div>
                         ))}

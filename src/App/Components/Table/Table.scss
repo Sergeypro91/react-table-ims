@@ -19,11 +19,26 @@ body {
             overflow-x: hidden;
             height: 800px;
             z-index: 1;
+            overflow: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+    
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+        &__arrow {
+            position: absolute;
+            right: 1rem;
+            font-size: 18px;
+            line-height: 18px;
         }
 
         .th {
             font-weight: bold;
             background: #dadada;
+            position: relative;
         }
         
         .tr {
@@ -47,7 +62,6 @@ body {
                 background: #dadada;
 
                 &.table__row--active {
-                    
                     background: darken(#007ad9, 10%);
                 }
             }
@@ -74,7 +88,7 @@ body {
             .resizer {
                 right: 0;
                 background: #007bd925;
-                width: 10px;
+                width: 50px;
                 height: 100%;
                 position: absolute;
                 top: 0;

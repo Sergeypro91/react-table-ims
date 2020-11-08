@@ -23,7 +23,7 @@ const App = () => {
     const tableRowArr = useRef<HTMLTableRowElement[]>();
 
     const getTableData = () => {
-        const url = 'https://team.carddex.ru/api/rr/monitoring/base/online?count=1000';
+        const url = 'https://team.carddex.ru/api/rr/monitoring/base/online?count=100';
 
         fetch(url)
             .then((response) => {
