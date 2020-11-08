@@ -68,6 +68,16 @@ const App = () => {
     }, [allRow, selectedRow]);
 
     useEffect(() => {
+        if (tableRowArr.current) {
+            if (tableRowArr.current![curentRowIndex!]) {
+                tableRowArr.current![curentRowIndex!].scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        }
+    }, [curentRowIndex]);
+
+    useEffect(() => {
         if (selectedRow) {
             document.querySelector('.table__row--active')?.classList.remove('table__row--active');
 
@@ -76,22 +86,18 @@ const App = () => {
             } else {
                 setCurentRowIndex(0);
             }
-
-            tableRowArr.current![curentRowIndex!].scrollIntoView({
-                behavior: 'smooth'
-            });
         }
     }, [selectedRow, curentRowIndex]);
 
     const onKeyDown = useCallback(
-        (ev: KeyboardEvent): any => {
+        (e: KeyboardEvent): any => {
             const trackedKeys = ['ArrowUp', 'ArrowDown', 'Enter', 'Escape'];
-            const evWithKey = trackedKeys.includes(ev.key);
+            const eventKey = trackedKeys.includes(e.key);
 
-            if (evWithKey && allRow) {
-                if (ev.key === 'ArrowUp' && curentRowIndex > 0) {
-                    ev.preventDefault();
-                    ev.stopPropagation();
+            if (eventKey && allRow) {
+                if (e.key === 'ArrowUp' && curentRowIndex > 0) {
+                    e.preventDefault();
+                    e.stopPropagation();
 
                     setSelectedRow(allRow[curentRowIndex! - 1]);
                     setCurentRowIndex(curentRowIndex! - 1);
@@ -100,9 +106,9 @@ const App = () => {
                         behavior: 'smooth'
                     });
                 }
-                if (ev.key === 'ArrowDown' && curentRowIndex < allRow.length - 1) {
-                    ev.preventDefault();
-                    ev.stopPropagation();
+                if (e.key === 'ArrowDown' && curentRowIndex < allRow.length - 1) {
+                    e.preventDefault();
+                    e.stopPropagation();
 
                     setSelectedRow(allRow[curentRowIndex! + 1]);
                     setCurentRowIndex(curentRowIndex! + 1);
@@ -111,10 +117,10 @@ const App = () => {
                         behavior: 'smooth'
                     });
                 }
-                if (ev.key === 'Enter') {
+                if (e.key === 'Enter') {
                     console.log('Enter');
                 }
-                if (ev.key === 'Escape') {
+                if (e.key === 'Escape') {
                     console.log('Escape');
                 }
             }
@@ -156,17 +162,26 @@ const App = () => {
 
     return (
         <div className="app">
-            {data ? (
-                <Table
-                    columns={columns}
-                    data={data}
-                    setSelectedRow={setSelectedRow}
-                    setAllRow={setAllRow}
-                    setCurentRowIndex={setCurentRowIndex}
-                />
-            ) : (
-                <div>Loading data</div>
-            )}
+            <div
+                className="custom-tabl"
+                onDoubleClick={() => console.log('Double CLICK')}
+                onContextMenu={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Context menu');
+                }}>
+                {data ? (
+                    <Table
+                        columns={columns}
+                        data={data}
+                        setSelectedRow={setSelectedRow}
+                        setAllRow={setAllRow}
+                        setCurentRowIndex={setCurentRowIndex}
+                    />
+                ) : (
+                    <div>Loading data</div>
+                )}
+            </div>
         </div>
     );
 };

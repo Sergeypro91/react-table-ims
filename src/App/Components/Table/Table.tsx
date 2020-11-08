@@ -70,7 +70,6 @@ const TableInner = ({ columns, data, setSelectedRow, setAllRow, setCurentRowInde
                         {headerGroup.headers.map((column) => (
                             <div {...column.getHeaderProps(column.getSortByToggleProps(headerProps))} className="th">
                                 {column.render('Header')}
-                                {/* Use column.getResizerProps to hook up the events correctly */}
                                 {column.canResize && (
                                     <div
                                         {...column.getResizerProps()}
