@@ -22,8 +22,6 @@ const App = () => {
     const [curentRowIndex, setCurentRowIndex] = useState(0);
     const tableRowArr = useRef<HTMLTableRowElement[]>();
 
-    // console.log('Render');
-
     const getTableData = () => {
         const url = 'https://team.carddex.ru/api/rr/monitoring/base/online?count=1000';
 
@@ -92,21 +90,23 @@ const App = () => {
 
             if (evWithKey && allRow) {
                 if (ev.key === 'ArrowUp' && curentRowIndex > 0) {
-                    console.log('ArrowUp');
                     ev.preventDefault();
                     ev.stopPropagation();
+
                     setSelectedRow(allRow[curentRowIndex! - 1]);
                     setCurentRowIndex(curentRowIndex! - 1);
+
                     tableRowArr.current![curentRowIndex! - 1].scrollIntoView({
                         behavior: 'smooth'
                     });
                 }
                 if (ev.key === 'ArrowDown' && curentRowIndex < allRow.length - 1) {
-                    console.log('ArrowDown');
                     ev.preventDefault();
                     ev.stopPropagation();
+
                     setSelectedRow(allRow[curentRowIndex! + 1]);
                     setCurentRowIndex(curentRowIndex! + 1);
+
                     tableRowArr.current![curentRowIndex! + 1].scrollIntoView({
                         behavior: 'smooth'
                     });
@@ -124,6 +124,7 @@ const App = () => {
 
     useEffect(() => {
         document.addEventListener('keydown', onKeyDown as EventListener, false);
+
         return () => {
             document.removeEventListener('keydown', onKeyDown as EventListener, false);
         };

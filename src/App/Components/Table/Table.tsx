@@ -12,7 +12,7 @@ interface TableProps {
     setCurentRowIndex: (property: any) => void;
 }
 
-const getStyles = (props, align = 'left') => [
+const getStyles = (props: any, align = 'left') => [
     props,
     {
         style: {
@@ -23,17 +23,16 @@ const getStyles = (props, align = 'left') => [
     }
 ];
 
-const headerProps = (props, { column }) => getStyles(props, column.align);
+const headerProps = (props: any, { column }: any) => getStyles(props, column.align);
 
-const cellProps = (props, { cell }) => getStyles(props, cell.column.align);
+const cellProps = (props: any, { cell }: any) => getStyles(props, cell.column.align);
 
 const TableInner = ({ columns, data, setSelectedRow, setAllRow, setCurentRowIndex }: TableProps) => {
     const defaultColumn = React.useMemo(
         () => ({
-            // When using the useFlexLayout:
-            minWidth: 30, // minWidth is only used as a limit for resizing
-            width: 150, // width is used for both the flex-basis and flex-grow
-            maxWidth: 200 // maxWidth is only used as a limit for resizing
+            minWidth: 30,
+            width: 150,
+            maxWidth: 200
         }),
         []
     );
@@ -78,6 +77,7 @@ const TableInner = ({ columns, data, setSelectedRow, setAllRow, setCurentRowInde
                                         className={`resizer ${column.isResizing ? 'isResizing' : ''}`}
                                     />
                                 )}
+
                                 <span>
                                     {column.isSorted && column.isSortedDesc && ' 🔽'}
                                     {column.isSorted && !column.isSortedDesc && ' 🔼'}
@@ -96,7 +96,7 @@ const TableInner = ({ columns, data, setSelectedRow, setAllRow, setCurentRowInde
                         <div
                             {...row.getRowProps()}
                             className="table__row"
-                            id={index}
+                            id={index.toString()}
                             onClick={() => onMouseClick(row, index)}
                             onContextMenu={() => onMouseContextMenu(row, index)}>
                             {row.cells.map((cell: any) => {
