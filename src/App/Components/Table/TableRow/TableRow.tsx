@@ -22,6 +22,7 @@ const TableRowInner = (props: TableRowProps) => {
         <tr
             {...props.row.getRowProps()}
             className="table__row"
+            id={props.row.index}
             onClick={() => onMouseClick(props.row, props.i)}
             onContextMenu={() => onMouseContextMenu(props.row, props.i)}>
             {props.row.cells.map((cell: any) => {

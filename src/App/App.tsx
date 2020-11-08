@@ -16,11 +16,13 @@ interface RowProps {
 }
 
 const App = () => {
-    const [tableData, setTableData] = useState([]);
-    const [allRow, setAllRow] = useState([]);
+    const [tableData, setTableData] = useState();
+    const [allRow, setAllRow] = useState<RowProps[]>();
     const [selectedRow, setSelectedRow] = useState<RowProps>();
-    const [curentRowIndex, setCurentRowIndex] = useState<number>();
+    const [curentRowIndex, setCurentRowIndex] = useState(0);
     const tableRowArr = useRef<HTMLTableRowElement[]>();
+
+    // console.log('Render');
 
     const getTableData = () => {
         const url = 'https://team.carddex.ru/api/rr/monitoring/base/online?count=100';
@@ -41,11 +43,31 @@ const App = () => {
 
     useEffect(() => {
         tableRowArr.current = Array.from(document.querySelectorAll('.table__row'));
-        if (!curentRowIndex) {
-            setSelectedRow(allRow[0]);
-            setCurentRowIndex(0);
+        if (allRow) {
+            if (selectedRow === undefined) {
+                setSelectedRow(allRow[0]);
+            }
         }
-    }, [tableData, allRow, curentRowIndex]);
+    }, [tableData, allRow, selectedRow]);
+
+    useEffect(() => {
+        if (allRow) {
+            if (allRow[0].index) {
+                if (allRow[selectedRow!.index].index !== selectedRow!.index) {
+                    const newIndex = allRow.findIndex((element: RowProps, id: number) => {
+                        if (element.index === selectedRow!.index) {
+                            return id;
+                        }
+                        return undefined;
+                    });
+
+                    setCurentRowIndex(newIndex);
+                }
+            } else if (selectedRow) {
+                setCurentRowIndex(selectedRow!.index);
+            }
+        }
+    }, [allRow, selectedRow]);
 
     useEffect(() => {
         if (selectedRow) {
@@ -64,14 +86,14 @@ const App = () => {
                     console.log('ArrowUp');
                     ev.preventDefault();
                     ev.stopPropagation();
-                    setSelectedRow(allRow[curentRowIndex! - 1]);
+                    setSelectedRow(allRow && allRow[curentRowIndex! - 1]);
                     setCurentRowIndex(curentRowIndex! - 1);
                 }
                 if (ev.key === 'ArrowDown') {
                     console.log('ArrowDown');
                     ev.preventDefault();
                     ev.stopPropagation();
-                    setSelectedRow(allRow[curentRowIndex! + 1]);
+                    setSelectedRow(allRow && allRow[curentRowIndex! + 1]);
                     setCurentRowIndex(curentRowIndex! + 1);
                 }
                 if (ev.key === 'Enter') {
@@ -118,13 +140,17 @@ const App = () => {
 
     return (
         <div className="app">
-            <Table
-                columns={columns}
-                data={data}
-                setSelectedRow={setSelectedRow}
-                setAllRow={setAllRow}
-                setCurentRowIndex={setCurentRowIndex}
-            />
+            {data ? (
+                <Table
+                    columns={columns}
+                    data={data}
+                    setSelectedRow={setSelectedRow}
+                    setAllRow={setAllRow}
+                    setCurentRowIndex={setCurentRowIndex}
+                />
+            ) : (
+                <div>Loading data</div>
+            )}
         </div>
     );
 };
