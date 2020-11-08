@@ -44,13 +44,13 @@ const TableInner = ({ columns, data, setSelectedRow, setAllRow, setCurentRowInde
                 ))}
             </thead>
             <tbody {...getTableBodyProps()}>
-                {rows.map((row, i) => {
+                {rows.map((row, index) => {
                     prepareRow(row);
                     return (
                         <React.Fragment key={row.id}>
                             <TableRow
                                 row={row}
-                                i={i}
+                                index={index}
                                 setSelectedRow={setSelectedRow}
                                 setCurentRowIndex={setCurentRowIndex}
                             />

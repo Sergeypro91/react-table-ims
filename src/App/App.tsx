@@ -72,7 +72,12 @@ const App = () => {
     useEffect(() => {
         if (selectedRow) {
             document.querySelector('.table__row--active')?.classList.remove('table__row--active');
-            tableRowArr.current![curentRowIndex!].classList.add('table__row--active');
+
+            if (curentRowIndex >= 0) {
+                tableRowArr.current![curentRowIndex!].classList.add('table__row--active');
+            } else {
+                setCurentRowIndex(0);
+            }
         }
     }, [selectedRow, curentRowIndex]);
 
@@ -81,19 +86,19 @@ const App = () => {
             const trackedKeys = ['ArrowUp', 'ArrowDown', 'Enter', 'Escape'];
             const evWithKey = trackedKeys.includes(ev.key);
 
-            if (evWithKey) {
-                if (ev.key === 'ArrowUp') {
+            if (evWithKey && allRow) {
+                if (ev.key === 'ArrowUp' && curentRowIndex > 0) {
                     console.log('ArrowUp');
                     ev.preventDefault();
                     ev.stopPropagation();
-                    setSelectedRow(allRow && allRow[curentRowIndex! - 1]);
+                    setSelectedRow(allRow[curentRowIndex! - 1]);
                     setCurentRowIndex(curentRowIndex! - 1);
                 }
-                if (ev.key === 'ArrowDown') {
+                if (ev.key === 'ArrowDown' && curentRowIndex < allRow.length - 1) {
                     console.log('ArrowDown');
                     ev.preventDefault();
                     ev.stopPropagation();
-                    setSelectedRow(allRow && allRow[curentRowIndex! + 1]);
+                    setSelectedRow(allRow[curentRowIndex! + 1]);
                     setCurentRowIndex(curentRowIndex! + 1);
                 }
                 if (ev.key === 'Enter') {
