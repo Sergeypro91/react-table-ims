@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useEffect, memo } from 'react';
-import { useTable, useSortBy } from 'react-table';
-import { TableRow } from './TableRow/TableRow';
+import { useTable, useSortBy, useFlexLayout, useResizeColumns } from 'react-table';
+// import { TableRow } from './TableRow/TableRow';
 import './Table.scss';
 
 interface TableProps {
@@ -12,53 +12,105 @@ interface TableProps {
     setCurentRowIndex: (property: any) => void;
 }
 
+const getStyles = (props, align = 'left') => [
+    props,
+    {
+        style: {
+            justifyContent: align === 'right' ? 'flex-end' : 'flex-start',
+            alignItems: 'flex-start',
+            display: 'flex'
+        }
+    }
+];
+
+const headerProps = (props, { column }) => getStyles(props, column.align);
+
+const cellProps = (props, { cell }) => getStyles(props, cell.column.align);
+
 const TableInner = ({ columns, data, setSelectedRow, setAllRow, setCurentRowIndex }: TableProps) => {
+    const defaultColumn = React.useMemo(
+        () => ({
+            // When using the useFlexLayout:
+            minWidth: 30, // minWidth is only used as a limit for resizing
+            width: 150, // width is used for both the flex-basis and flex-grow
+            maxWidth: 200 // maxWidth is only used as a limit for resizing
+        }),
+        []
+    );
+
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
             columns,
-            data
+            data,
+            defaultColumn
         },
-        useSortBy
+        useSortBy,
+        useFlexLayout,
+        useResizeColumns
     );
+
+    const onMouseClick = (row: any, index: number) => {
+        setSelectedRow(row);
+        setCurentRowIndex(index);
+    };
+
+    const onMouseContextMenu = (row: any, index: number) => {
+        setSelectedRow(row);
+        setCurentRowIndex(index);
+    };
 
     useEffect(() => {
         setAllRow(rows);
     }, [rows, setAllRow]);
 
     return (
-        <table {...getTableProps()}>
-            <thead>
+        <div {...getTableProps()} className="table">
+            <div className="table__head">
                 {headerGroups.map((headerGroup) => (
-                    <tr {...headerGroup.getHeaderGroupProps()}>
+                    <div {...headerGroup.getHeaderGroupProps()} className="tr">
                         {headerGroup.headers.map((column) => (
-                            <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                            <div {...column.getHeaderProps(column.getSortByToggleProps(headerProps))} className="th">
                                 {column.render('Header')}
+                                {/* Use column.getResizerProps to hook up the events correctly */}
+                                {column.canResize && (
+                                    <div
+                                        {...column.getResizerProps()}
+                                        className={`resizer ${column.isResizing ? 'isResizing' : ''}`}
+                                    />
+                                )}
                                 <span>
                                     {column.isSorted && column.isSortedDesc && ' 🔽'}
                                     {column.isSorted && !column.isSortedDesc && ' 🔼'}
                                     {!column.isSorted && ''}
                                 </span>
-                            </th>
+                            </div>
                         ))}
-                    </tr>
+                    </div>
                 ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
+            </div>
+
+            <div {...getTableBodyProps()} className="tbody table__body">
                 {rows.map((row, index) => {
                     prepareRow(row);
                     return (
-                        <React.Fragment key={row.id}>
-                            <TableRow
-                                row={row}
-                                index={index}
-                                setSelectedRow={setSelectedRow}
-                                setCurentRowIndex={setCurentRowIndex}
-                            />
-                        </React.Fragment>
+                        <div
+                            {...row.getRowProps()}
+                            className="table__row"
+                            id={index}
+                            onClick={() => onMouseClick(row, index)}
+                            onContextMenu={() => onMouseContextMenu(row, index)}>
+                            {row.cells.map((cell: any) => {
+                                return (
+                                    <div className="td" {...cell.getCellProps(cellProps)}>
+                                        {cell.render('Cell')}
+                                    </div>
+                                );
+                            })}
+                        </div>
                     );
                 })}
-            </tbody>
-        </table>
+            </div>
+        </div>
     );
 };
 

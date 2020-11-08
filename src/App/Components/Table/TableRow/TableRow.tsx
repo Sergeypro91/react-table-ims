@@ -19,16 +19,20 @@ const TableRowInner = (props: TableRowProps) => {
     };
 
     return (
-        <tr
+        <div
             {...props.row.getRowProps()}
-            className="table__row"
+            className="tr table__row"
             id={props.row.index}
             onClick={() => onMouseClick(props.row, props.index)}
             onContextMenu={() => onMouseContextMenu(props.row, props.index)}>
             {props.row.cells.map((cell: any) => {
-                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                return (
+                    <div className="td" {...cell.getCellProps()}>
+                        {cell.render('Cell')}
+                    </div>
+                );
             })}
-        </tr>
+        </div>
     );
 };
 

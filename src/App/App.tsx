@@ -25,7 +25,7 @@ const App = () => {
     // console.log('Render');
 
     const getTableData = () => {
-        const url = 'https://team.carddex.ru/api/rr/monitoring/base/online?count=100';
+        const url = 'https://team.carddex.ru/api/rr/monitoring/base/online?count=1000';
 
         fetch(url)
             .then((response) => {
@@ -78,6 +78,10 @@ const App = () => {
             } else {
                 setCurentRowIndex(0);
             }
+
+            tableRowArr.current![curentRowIndex!].scrollIntoView({
+                behavior: 'smooth'
+            });
         }
     }, [selectedRow, curentRowIndex]);
 
@@ -93,6 +97,9 @@ const App = () => {
                     ev.stopPropagation();
                     setSelectedRow(allRow[curentRowIndex! - 1]);
                     setCurentRowIndex(curentRowIndex! - 1);
+                    tableRowArr.current![curentRowIndex! - 1].scrollIntoView({
+                        behavior: 'smooth'
+                    });
                 }
                 if (ev.key === 'ArrowDown' && curentRowIndex < allRow.length - 1) {
                     console.log('ArrowDown');
@@ -100,6 +107,9 @@ const App = () => {
                     ev.stopPropagation();
                     setSelectedRow(allRow[curentRowIndex! + 1]);
                     setCurentRowIndex(curentRowIndex! + 1);
+                    tableRowArr.current![curentRowIndex! + 1].scrollIntoView({
+                        behavior: 'smooth'
+                    });
                 }
                 if (ev.key === 'Enter') {
                     console.log('Enter');
@@ -122,19 +132,19 @@ const App = () => {
     const columns = React.useMemo(
         () => [
             {
-                Header: 'Age',
+                Header: 'Событие',
                 accessor: 'eventCodeName'
             },
             {
-                Header: 'Visits',
+                Header: 'Время события',
                 accessor: 'eventDateTime'
             },
             {
-                Header: 'Status',
+                Header: 'Физ. лицо',
                 accessor: 'physpersonName'
             },
             {
-                Header: 'Profile Progress',
+                Header: 'Источник',
                 accessor: 'sourceName'
             }
         ],
