@@ -68,24 +68,43 @@ const TableInner = ({ columns, data, setSelectedRow, setAllRow, setCurentRowInde
                 {headerGroups.map((headerGroup) => (
                     <div {...headerGroup.getHeaderGroupProps()} className="tr">
                         {headerGroup.headers.map((column) => (
-                            <div {...column.getHeaderProps(column.getSortByToggleProps(headerProps))} className="th">
-                                {column.render('Header')}
-                                {column.canResize && (
-                                    <div
-                                        {...column.getResizerProps()}
-                                        className={`resizer ${column.isResizing ? 'isResizing' : ''}`}
-                                    />
-                                )}
+                            <React.Fragment key={column.index}>
+                                <div
+                                    {...column.getHeaderProps(column.getSortByToggleProps(headerProps))}
+                                    className="th">
+                                    {column.render('Header')}
 
-                                <span className="table__arrow">
-                                    {column.isSorted && column.isSortedDesc && '🠧'}
-                                    {column.isSorted && !column.isSortedDesc && '🠥'}
-                                    {!column.isSorted && '⮁'}
-                                </span>
-                            </div>
+                                    <span className="table__arrow">
+                                        {column.isSorted && column.isSortedDesc && '🠧'}
+                                        {column.isSorted && !column.isSortedDesc && '🠥'}
+                                        {!column.isSorted && '⮁'}
+                                    </span>
+                                </div>
+                                <div className="th__resizer">
+                                    {column.canResize && (
+                                        <div
+                                            {...column.getResizerProps()}
+                                            className={`resizer ${column.isResizing ? 'isResizing' : ''}`}
+                                        />
+                                    )}
+                                </div>
+                                <div className="th__filter">123</div>
+                            </React.Fragment>
                         ))}
                     </div>
                 ))}
+                {/* {headerGroups.map((headerGroup) => (
+                    <div
+                        {...headerGroup.getHeaderGroupProps()}
+                        className="tr"
+                        key={headerGroup.index + headerGroup.headers.length}>
+                        {testTableColumnFilter.map((object) => (
+                            <div key={object.index} className="th">
+                                {object.filter}
+                            </div>
+                        ))}
+                    </div>
+                ))} */}
             </div>
 
             <div {...getTableBodyProps()} className="tbody table__body">

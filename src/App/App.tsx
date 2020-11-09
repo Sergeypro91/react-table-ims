@@ -144,7 +144,8 @@ const App = () => {
             },
             {
                 Header: 'Время события',
-                accessor: 'eventDateTime'
+                accessor: 'eventDateTime',
+                width: 80
             },
             {
                 Header: 'Физ. лицо',
